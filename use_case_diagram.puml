@@ -1,0 +1,35 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Student" as Student
+actor "Academic Registrar" as Registrar
+actor "<<System>>\nAllocation Engine" as Engine
+
+rectangle "Academic Elective Bidding & Allocation System" {
+    usecase "UC-01: Submit & Manage Elective Bids" as UC1
+    usecase "UC-02: Validate Course Prerequisites" as UC2
+    usecase "UC-03: Resolve Timetable Conflict" as UC3
+    usecase "UC-04: Configure Course Offerings & Capacities" as UC4
+    usecase "UC-05: Execute Elective Allocation Algorithm" as UC5
+    usecase "UC-06: View & Export Clash-Free Timetable" as UC6
+    usecase "UC-07: Apply Manual Allocation Override" as UC7
+
+    ' Associations
+    Student --> UC1
+    Student --> UC6
+
+    Registrar --> UC4
+    Registrar --> UC5
+    Registrar --> UC6
+
+    UC5 --> Engine
+
+    ' Relationships
+    UC1 .> UC2 : <<include>>
+    UC3 .> UC1 : <<extend>>
+    UC7 .> UC5 : <<extend>>
+}
+@enduml
