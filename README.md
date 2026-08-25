@@ -1,8 +1,18 @@
-# Problem Statement #05: Academic Elective Bidding & Allocation System
-**Course:** PES University - Dept. of CSE | Lab 1: Requirements Engineering & UML Use-Case Modelling  
-**Domain:** Campus & Academic Operations  
+# Lab 1: Requirements Engineering & UML Use-Case Modelling
+**Course:** PES University - Dept. of CSE  
+**Name:** Shashank D  
+**SRN:** PES1UG24CS433  
 
 ---
+
+## Problem Statement #05 | Campus & Academic Operations
+### **Academic Elective Bidding & Allocation System**
+
+### **1. Problem Context & Overview**
+University departments need an automated elective course selection mechanism where students allocate bidding credits across preferences and the engine solves allocation constraints while preventing timetable collisions.
+
+**Target Stakeholders / Actors:** Student, Academic Registrar, Allocation Engine
+
 
 ## 1. Complete Requirements Table
 
