@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab 1 Deliverables: Academic Elective Bidding & Allocation System</title>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     :root {
       --primary: #1e3a8a;
@@ -12,11 +11,15 @@
       --bg: #f8fafc;
       --card-bg: #ffffff;
       --text: #1e293b;
-      --border: #e2e8f0;
+      --border: #cbd5e1;
       --accent: #0284c7;
+      --danger: #991b1b;
+      --danger-bg: #fef2f2;
+      --success: #166534;
+      --success-bg: #f0fdf4;
     }
     body {
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
@@ -24,44 +27,75 @@
       margin: 0;
     }
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
       background: var(--card-bg);
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      padding: 45px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
       border: 1px solid var(--border);
     }
     .header {
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 20px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 25px;
       margin-bottom: 30px;
     }
     .badge {
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 4px 10px;
-      border-radius: 6px;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 5px 12px;
+      border-radius: 20px;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       display: inline-block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .nav-pill {
+      background: #f1f5f9;
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid #cbd5e1;
+    }
+    .nav-pill:hover {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
     }
     h1 {
       color: var(--primary);
       margin: 5px 0 10px 0;
-      font-size: 1.9rem;
+      font-size: 2.1rem;
+      font-weight: 800;
     }
     h2 {
       color: var(--primary);
-      border-left: 4px solid var(--secondary);
-      padding-left: 12px;
-      margin-top: 35px;
-      font-size: 1.4rem;
+      border-left: 5px solid var(--secondary);
+      padding-left: 14px;
+      margin-top: 45px;
+      font-size: 1.5rem;
     }
     h3 {
       color: #334155;
       margin-top: 25px;
+      font-size: 1.2rem;
+    }
+    h4 {
+      color: #475569;
+      margin-top: 18px;
+      font-size: 1.05rem;
     }
     table {
       width: 100%;
@@ -78,34 +112,52 @@
     th {
       background-color: #f1f5f9;
       color: #1e293b;
-      font-weight: 600;
+      font-weight: 700;
     }
     tr:nth-child(even) {
       background-color: #f8fafc;
     }
     .tag-high {
       background: #fee2e2;
-      color: #b91c1c;
-      font-weight: 600;
-      padding: 2px 8px;
+      color: #991b1b;
+      font-weight: 700;
+      padding: 3px 8px;
       border-radius: 4px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
+      display: inline-block;
     }
     .tag-med {
       background: #fef3c7;
-      color: #b45309;
-      font-weight: 600;
-      padding: 2px 8px;
+      color: #92400e;
+      font-weight: 700;
+      padding: 3px 8px;
       border-radius: 4px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
+      display: inline-block;
+    }
+    .tag-critical {
+      background: #7f1d1d;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      display: inline-block;
     }
     .diagram-container {
-      background: #f8fafc;
+      background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 25px;
       text-align: center;
       margin: 20px 0;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+    }
+    .diagram-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     ol, ul {
       padding-left: 22px;
@@ -114,11 +166,38 @@
       margin-bottom: 8px;
     }
     .flow-card {
-      background: #fdfdfd;
+      background: #ffffff;
       border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .code-block {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 18px;
       border-radius: 8px;
-      padding: 20px;
-      margin-top: 15px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .meta-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin: 15px 0;
+      font-size: 0.95rem;
+    }
+    .footer {
+      margin-top: 50px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 20px;
+      text-align: center;
+      font-size: 0.88rem;
+      color: #64748b;
     }
   </style>
 </head>
@@ -127,12 +206,23 @@
     <div class="header">
       <span class="badge">PES University • Dept. of CSE • Lab 1</span>
       <h1>Academic Elective Bidding & Allocation System</h1>
-      <p style="color: #475569; margin: 4px 0 8px 0; font-size: 1.05rem;"><strong>Name:</strong> Shashank D &nbsp;|&nbsp; <strong>SRN:</strong> PES1UG24CS433</p>
-      <p style="color: #64748b; margin: 0;"><strong>Problem Statement #05:</strong> Requirements Engineering & UML Use-Case Modelling</p>
+      <div class="meta-box">
+        <strong>Student Name:</strong> Shashank D &nbsp;|&nbsp; 
+        <strong>SRN:</strong> PES1UG24CS433 &nbsp;|&nbsp; 
+        <strong>Problem Statement #05:</strong> Requirements Engineering & UML Use-Case Modelling
+      </div>
+      
+      <div class="nav-pills">
+        <a href="#d1" class="nav-pill">1. Requirements Table</a>
+        <a href="#d2" class="nav-pill">2. Main Use Case Diagram</a>
+        <a href="#d3" class="nav-pill">3. Main Flow Specification</a>
+        <a href="#d4" class="nav-pill">4. Alternate Flow Diagram & Specs</a>
+        <a href="#d5" class="nav-pill">5. Exception Flow Document</a>
+      </div>
     </div>
 
     <!-- DELIVERABLE 1 -->
-    <h2>1. Complete Requirements Table</h2>
+    <h2 id="d1">1. Complete Requirements Table</h2>
     <table>
       <thead>
         <tr>
@@ -205,20 +295,20 @@
     </table>
 
     <!-- DELIVERABLE 2 -->
-    <h2>2. UML Use-Case Diagram</h2>
+    <h2 id="d2">2. Main UML Use-Case Diagram</h2>
     <div class="diagram-container">
-      <img src="use_case_diagram.png" alt="UML Use-Case Diagram: Academic Elective Bidding & Allocation System" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);" />
+      <img src="use_case_diagram.png" alt="UML Use-Case Diagram: Academic Elective Bidding & Allocation System" />
     </div>
 
     <!-- DELIVERABLE 3 -->
-    <h2>3. Use-Case Flow Specification</h2>
+    <h2 id="d3">3. Use-Case Flow Specification (Main Flow)</h2>
     <div class="flow-card">
       <h3>Use Case: UC-01 — Submit Elective Bids</h3>
       <p><strong>Primary Actor:</strong> Student &nbsp;|&nbsp; <strong>Secondary Actor:</strong> Academic Database / Prerequisite Service &nbsp;|&nbsp; <strong>Priority:</strong> High</p>
       
       <p><strong>Preconditions:</strong></p>
       <ul>
-        <li>Student is authenticated and in good academic standing.</li>
+        <li>Student is authenticated and has active enrollment status.</li>
         <li>Elective bidding window is active/open.</li>
         <li>Student has exactly 100 unspent bidding points available for the semester.</li>
       </ul>
@@ -226,7 +316,7 @@
       <p><strong>Postconditions:</strong></p>
       <ul>
         <li>Student's elective bids and credit allocations are persistently stored in the database.</li>
-        <li>100 bidding points are marked as allocated.</li>
+        <li>Total credits used are marked as 100.</li>
         <li>An immutable audit log entry and confirmation receipt are generated.</li>
       </ul>
 
@@ -234,43 +324,129 @@
       <ol>
         <li>Student logs into the portal and navigates to the "Elective Course Bidding" section.</li>
         <li>System displays the list of offered elective courses, descriptions, available seats, faculty, and schedule slot timings.</li>
-        <li>Student selects desired elective courses and distributes exactly 100 bidding points among them based on personal priority.</li>
+        <li>Student selects desired elective courses and distributes exactly 100 bidding points among them based on priority.</li>
         <li>Student submits the bidding form by clicking "Submit Bids".</li>
-        <li>System executes <code>&laquo;include&raquo;</code> <strong>UC-02: Validate Course Prerequisites</strong> to check the student's completed credits and course history against course prerequisites.</li>
+        <li>System executes <code>&laquo;include&raquo;</code> <strong>UC-02: Validate Course Prerequisites</strong> to check completed credits against prerequisites.</li>
         <li>System validates that the sum of allocated bidding points is exactly equal to 100.</li>
         <li>System confirms that no two selected electives share mutually exclusive required core slots.</li>
         <li>System commits the bid records into the active allocation pool and generates a transaction timestamp.</li>
-        <li>System displays a confirmation message and summary of locked preferences.</li>
+        <li>System displays confirmation message and locked preference summary.</li>
         <li>Use Case ends successfully.</li>
       </ol>
+    </div>
 
-      <h4>Alternate Flows</h4>
+    <!-- DELIVERABLE 4 -->
+    <h2 id="d4">4. Alternate Flow Use-Case Diagram & Specifications</h2>
+    <div class="diagram-container">
+      <img src="alternate_flow_use_case_diagram.png" alt="Alternate Flow Use-Case Diagram: Academic Elective Bidding & Allocation System" />
+    </div>
+
+    <div class="flow-card">
+      <h3>Alternate Flow Specifications</h3>
       <ul>
-        <li><strong>Flow 4a: Bidding Points Total Mismatch (&ne; 100 credits)</strong>
-          <br/>4a1. System detects sum of credits &ne; 100 (e.g. 90 or 110).
-          <br/>4a2. System blocks submission and displays: <em>"Error: Total allocated points must equal exactly 100 credits."</em>
-          <br/>4a3. Student adjusts point distribution to 100 and resubmits.
+        <li><strong>AF-01: Re-allocate Bidding Credits (Dynamic Demand Strategy - <code>&laquo;extend&raquo;</code> UC-01)</strong>
+          <br/><em>Condition:</em> Prior to Bidding Deadline Closure.
+          <br/><em>Flow:</em> Student reviews dynamic seat popularity metrics; adjusts points across draft electives to maximize allocation likelihood; saves updated 100-credit distribution.
         </li>
-        <li><strong>Flow 5a: Unmet Course Prerequisites</strong>
-          <br/>5a1. System detects student has not passed prerequisite Course P for selected Elective E.
-          <br/>5a2. System rejects bid for Elective E and displays: <em>"Ineligible: Prerequisite [P] not met."</em>
-          <br/>5a3. Student replaces Elective E with an eligible elective and resubmits.
+        <li><strong>AF-02: Prerequisite Waiver & Equivalency Approval (<code>&laquo;extend&raquo;</code> UC-02)</strong>
+          <br/><em>Condition:</em> Registrar Waiver Granted for Course Prerequisites.
+          <br/><em>Flow:</em> Student lacks standard prerequisite but presents signed registrar waiver token; system bypasses standard check and approves bid submission.
         </li>
-        <li><strong>Flow 7a: Potential Timetable Slot Collision (<code>&laquo;extend&raquo;</code> UC-03)</strong>
-          <br/>7a1. System detects two high-priority selected electives occupy the exact same timetable slot.
-          <br/>7a2. System invokes <strong>UC-03: Resolve Timetable Conflict</strong>, alerting the student to designate preference rank.
-          <br/>7a3. Flow resumes at Step 8.
+        <li><strong>AF-03: Auto-Swap to Backup Elective Preference (<code>&laquo;extend&raquo;</code> UC-03)</strong>
+          <br/><em>Condition:</em> Primary Elective Timetable Clash Detected.
+          <br/><em>Flow:</em> When top-ranked preference conflicts with core slot, engine automatically shifts evaluation to pre-ranked secondary backup course without terminating submission.
         </li>
-        <li><strong>Flow 8a: Bidding Window Closes During Submission</strong>
-          <br/>8a1. System checks timestamp; bidding deadline has passed.
-          <br/>8a2. System aborts transaction and notifies student that bidding is closed.
+        <li><strong>AF-04: Execute CGPA Tie-Breaker & Section Auto-Balancing (<code>&laquo;extend&raquo;</code> UC-05)</strong>
+          <br/><em>Condition:</em> Equal Bid Points for Final Capacity Seat.
+          <br/><em>Flow:</em> Solver breaks point ties using Cumulative GPA and prerequisite grade index, assigning tied student to parallel open section slot.
+        </li>
+        <li><strong>AF-05: Waitlist Auto-Promotion & Seat Reclamation (<code>&laquo;extend&raquo;</code> UC-06)</strong>
+          <br/><em>Condition:</em> Seat Vacated during Add/Drop Window.
+          <br/><em>Flow:</em> Engine reclaims vacated seat and automatically promotes highest waitlisted student, updating timetable and dispatching notification.
         </li>
       </ul>
     </div>
-  </div>
 
-  <script>
-    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
-  </script>
+    <!-- DELIVERABLE 5 -->
+    <h2 id="d5">5. Exception Flow Specification Document</h2>
+    <div class="flow-card">
+      <h3>Exception Summary Matrix</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Exception ID</th>
+            <th>Target UC</th>
+            <th>Exception Title</th>
+            <th>Error Category</th>
+            <th>Severity</th>
+            <th>Detection & System Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>EF-01</strong></td>
+            <td>UC-01</td>
+            <td>Credit Sum Mismatch ($\neq 100$)</td>
+            <td>Data Validation</td>
+            <td><span class="tag-high">High</span></td>
+            <td>Halt commit; highlight fields; display dynamic point counter; prompt readjustment.</td>
+          </tr>
+          <tr>
+            <td><strong>EF-02</strong></td>
+            <td>UC-01 / UC-02</td>
+            <td>Unmet Prerequisite Check Failure</td>
+            <td>Domain Rule</td>
+            <td><span class="tag-high">High</span></td>
+            <td>Reject line-item bid; flag transcript gap; prompt course swap or waiver submission.</td>
+          </tr>
+          <tr>
+            <td><strong>EF-03</strong></td>
+            <td>UC-01 / UC-03</td>
+            <td>Unresolvable Slot Collision</td>
+            <td>Hard Constraint</td>
+            <td><span class="tag-high">High</span></td>
+            <td>Flag schedule clash with core slots; reject invalid matrix; prompt non-conflicting choice.</td>
+          </tr>
+          <tr>
+            <td><strong>EF-04</strong></td>
+            <td>UC-01</td>
+            <td>Deadline Expiry Lockout</td>
+            <td>Temporal / State</td>
+            <td><span class="tag-critical">Critical</span></td>
+            <td>Abort transaction; enforce READ_ONLY lock; preserve prior pre-deadline submission state.</td>
+          </tr>
+          <tr>
+            <td><strong>EF-05</strong></td>
+            <td>UC-05</td>
+            <td>Solver Convergence / Timeout</td>
+            <td>Performance</td>
+            <td><span class="tag-critical">Critical</span></td>
+            <td>Watchdog kills process at 30s limit; roll back DB checkpoint; alert Registrar for relaxation.</td>
+          </tr>
+          <tr>
+            <td><strong>EF-06</strong></td>
+            <td>UC-01 / UC-05</td>
+            <td>DB Concurrency Deadlock</td>
+            <td>Infrastructure</td>
+            <td><span class="tag-high">High</span></td>
+            <td>Catch DB lock; execute idempotent exponential retries; enqueue bid request if load spikes.</td>
+          </tr>
+          <tr>
+            <td><strong>EF-07</strong></td>
+            <td>UC-07</td>
+            <td>Unauthorized Override Attempt</td>
+            <td>Security / RBAC</td>
+            <td><span class="tag-critical">Critical</span></td>
+            <td>Deny access (HTTP 403); write immutable security audit log entry; flag origin IP.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <p>Academic Elective Bidding & Allocation System • Department of Computer Science & Engineering • PES University</p>
+      <p><strong>Shashank D (PES1UG24CS433)</strong> — Software Engineering Lab 1 Complete Deliverables</p>
+    </div>
+  </div>
 </body>
 </html>

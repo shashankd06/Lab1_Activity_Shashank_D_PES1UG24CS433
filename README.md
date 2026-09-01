@@ -13,6 +13,7 @@ University departments need an automated elective course selection mechanism whe
 
 **Target Stakeholders / Actors:** Student, Academic Registrar, Allocation Engine
 
+---
 
 ## 1. Complete Requirements Table
 
@@ -28,14 +29,14 @@ University departments need an automated elective course selection mechanism whe
 
 ---
 
-## 2. UML Use-Case Diagram
+## 2. Main UML Use-Case Diagram
 
 ### 2.1 Actors & Use Cases Overview
 
 #### **Actors:**
 1. **Student** (Primary Actor - Initiates bidding, manages preferences, views allocations)
 2. **Academic Registrar** (Primary Actor - Configures courses, runs solver, reviews rosters, handles overrides)
-3. **Timetable & Allocation Engine** (Secondary / Supporting System - Executes constraint satisfaction algorithm)
+3. **Allocation Engine** (Secondary / Supporting System - Executes constraint satisfaction algorithm)
 
 #### **Use Cases:**
 - **UC-01:** Submit & Manage Elective Bids
@@ -46,15 +47,13 @@ University departments need an automated elective course selection mechanism whe
 - **UC-06:** View & Export Clash-Free Timetable
 - **UC-07:** Apply Manual Allocation Override (*«extend»* to UC-05)
 
----
-### 2.2 UML Use-Case Diagram
+### 2.2 Main UML Use-Case Diagram
 
 ![Academic Elective Bidding & Allocation System UML Use-Case Diagram](use_case_diagram.png)
 
-
 ---
 
-## 3. Use-Case Flow Specification
+## 3. Main Use-Case Flow Specification
 
 ### **Use Case: UC-01 — Submit Elective Bids**
 
@@ -74,36 +73,72 @@ University departments need an automated elective course selection mechanism whe
 2. **System** displays the list of offered elective courses, descriptions, available seats, faculty, and schedule slot timings.
 3. **Student** selects up to $N$ elective courses and distributes exactly 100 bidding points among them based on priority.
 4. **Student** submits the bidding form by clicking "Submit Bids".
-5. **System** invokes `«include»` **UC-02: Validate Course Prerequisites** to check the student's completed credits and course history against course prerequisites.
+5. **System** invokes `«include»` **UC-02: Validate Course Prerequisites** to check completed credits and course history against prerequisites.
 6. **System** validates that the sum of allocated bidding points is exactly equal to 100.
 7. **System** confirms that no two selected electives share mutually exclusive required core slots.
 8. **System** commits the bid records into the active allocation pool and generates a transaction timestamp.
-9. **System** displays a success message: *"Your elective bids have been successfully recorded with 100 points distributed."* and provides a downloadable/printable confirmation summary.
+9. **System** displays a success message and summary receipt.
 10. **Use Case ends successfully.**
 
 ---
 
-#### **Alternate Flows:**
+## 4. Alternate Flow Use-Case Diagram & Specifications
 
-##### **Flow 4a: Bidding Points Total Mismatch (< 100 or > 100 credits)**
-- **4a1.** System checks the sum of distributed credits and detects that $\text{Sum} \neq 100$ (e.g., total = 90 or total = 110).
-- **4a2.** System blocks submission and displays an error alert: *"Error: Total allocated points must equal exactly 100 credits. Current Total: [X] credits."*
-- **4a3.** System highlights the credit allocation input fields with remaining/excess points counter.
-- **4a4.** Student adjusts point values to total 100 and resubmits (re-enters Main Flow at Step 4).
+### 4.1 Alternate Flow Use-Case Diagram
 
-##### **Flow 5a: Unmet Course Prerequisites**
-- **5a1.** During prerequisite verification, System detects student has not passed prerequisite Course $P$ for selected Elective $E$.
-- **5a2.** System rejects the bid for Elective $E$ and displays: *"Ineligible: You have not met the prerequisite [P] for [E]."*
-- **5a3.** System prompts the student to remove Elective $E$ or replace it with an eligible elective.
-- **5a4.** Student updates course selection, readjusts point distribution to 100, and resubmits.
+![Alternate Flow Use-Case Diagram](alternate_flow_use_case_diagram.png)
 
-##### **Flow 7a: Potential Timetable Slot Collision Detection (`«extend»` UC-03)**
-- **7a1.** System detects two high-priority selected electives occupy the exact same timetable slot.
-- **7a2.** System triggers **UC-03: Resolve Timetable Conflict**, showing a warning: *"Warning: Elective A and Elective B occupy the same slot (Slot T3). Only one can be allocated."*
-- **7a3.** Student confirms backup ranking preference or swaps one course for a non-conflicting slot.
-- **7a4.** Flow returns to Step 8.
+### 4.2 Alternate Flow Specifications
 
-##### **Flow 8a: Bidding Window Closes During Submission**
-- **8a1.** System verifies that the server time has exceeded the published bidding deadline before database write.
-- **8a2.** System cancels the transaction and alerts the student: *"Bidding window closed at [Time]. No further submissions or edits are permitted."*
-- **8a3.** Use case terminates without modifying previous bid state.
+- **AF-01: Re-allocate Bidding Credits (Dynamic Demand Strategy - `«extend»` UC-01)**
+  - *Condition:* Prior to Bidding Deadline Closure.
+  - *Flow:* Student reviews dynamic seat popularity metrics; adjusts points across draft electives to maximize allocation likelihood; saves updated 100-credit distribution.
+- **AF-02: Apply Prerequisite Waiver & Equivalency Approval (`«extend»` UC-02)**
+  - *Condition:* Registrar Waiver Granted for Course Prerequisites.
+  - *Flow:* Student lacks standard prerequisite but presents signed registrar waiver token; system bypasses standard check and approves bid submission.
+- **AF-03: Auto-Swap to Backup Elective Preference (`«extend»` UC-03)**
+  - *Condition:* Primary Elective Timetable Clash Detected.
+  - *Flow:* When top-ranked preference conflicts with core slot, engine automatically shifts evaluation to pre-ranked secondary backup course without terminating submission.
+- **AF-04: Execute CGPA Tie-Breaker & Section Auto-Balancing (`«extend»` UC-05)**
+  - *Condition:* Equal Bid Points for Final Capacity Seat.
+  - *Flow:* Solver breaks point ties using Cumulative GPA and prerequisite grade index, assigning tied student to parallel open section slot.
+- **AF-05: Waitlist Auto-Promotion & Seat Reclamation (`«extend»` UC-06)**
+  - *Condition:* Seat Vacated during Add/Drop Window.
+  - *Flow:* Engine reclaims vacated seat and automatically promotes highest waitlisted student, updating timetable and dispatching notification.
+
+---
+
+## 5. Exception Flow Specification Document
+
+### 5.1 Exception Flow Summary Matrix
+
+| Exception ID | Target Use Case | Exception Title | Error Category | Severity | Detection Trigger & System Response |
+| :--- | :--- | :--- | :--- | :---: | :--- |
+| **EF-01** | UC-01 | Credit Sum Mismatch ($\neq 100$) | Data Validation | High | Form sum $\neq 100$. System halts commit, displays dynamic point counter, and highlights input fields. |
+| **EF-02** | UC-01 / UC-02 | Unmet Course Prerequisite | Domain Rule | High | Prerequisite record missing. System rejects line-item bid, flags gap, and prompts course swap/waiver. |
+| **EF-03** | UC-01 / UC-03 | Unresolvable Slot Collision | Hard Constraint | High | Preference overlaps core slots. System rejects matrix and prompts non-conflicting bucket selection. |
+| **EF-04** | UC-01 | Bidding Window Expiry Lockout | Temporal / State | Critical | Timestamp $> T_{\text{deadline}}$. System aborts transaction, enforces READ_ONLY state, and preserves prior state. |
+| **EF-05** | UC-05 | Solver Convergence / Timeout | Performance | Critical | Execution $> 30$s limit. Watchdog kills process, rolls back DB checkpoint, and alerts Registrar. |
+| **EF-06** | UC-01 / UC-05 | DB Concurrency Deadlock | Infrastructure | High | DB lock failure (`SQLSTATE 40P01`). System triggers idempotent retries and enqueues requests. |
+| **EF-07** | UC-07 | Unauthorized Override Breach | Security / RBAC | Critical | Missing `ROLE_REGISTRAR`. System returns 403 Forbidden, logs immutable audit entry, and flags origin IP. |
+
+---
+
+## 6. Deliverable Artifacts Directory Structure
+
+```
+.
+├── Deliverable_1_Requirements_Table.pdf
+├── Deliverable_2_Use_Case_Diagram.pdf
+├── Deliverable_3_Use_Case_Flow_Specification.pdf
+├── Deliverable_4_Alternate_Flow_Use_Case_Diagram.pdf
+├── Deliverable_5_Exception_Flow_Specification.pdf
+├── Complete_Lab1_Deliverables_Report.pdf
+├── README.md
+├── index.html
+├── exception_flow_document.md
+├── use_case_diagram.puml
+├── use_case_diagram.png
+├── alternate_flow_use_case_diagram.puml
+└── alternate_flow_use_case_diagram.png
+```

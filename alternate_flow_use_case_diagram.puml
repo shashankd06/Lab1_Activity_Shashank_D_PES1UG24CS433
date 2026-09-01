@@ -1,0 +1,57 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+skinparam rectangle {
+    BackgroundColor #F8FAFC
+    BorderColor #1E3A8A
+    FontColor #1E3A8A
+}
+
+skinparam usecase {
+    BackgroundColor #FFFFFF
+    BorderColor #3B82F6
+    FontColor #1E293B
+}
+
+actor "Student" as Student
+actor "Academic Registrar" as Registrar
+actor "<<System>>\nAllocation Engine" as Engine
+
+rectangle "Academic Elective Bidding System — Alternate Flows & Branching Scenarios" {
+    ' Core Base Use Cases
+    usecase "UC-01: Submit & Manage Elective Bids" as UC1
+    usecase "UC-02: Validate Course Prerequisites" as UC2
+    usecase "UC-03: Resolve Timetable Conflict" as UC3
+    usecase "UC-05: Execute Elective Allocation Algorithm" as UC5
+    usecase "UC-06: View & Export Clash-Free Timetable" as UC6
+
+    ' Alternate Flow Extensions & Variation Paths
+    usecase "AF-01: Re-allocate Bidding Credits\n(Dynamic Demand Strategy)" as AF1
+    usecase "AF-02: Apply Prerequisite Waiver &\nEquivalency Approval" as AF2
+    usecase "AF-03: Auto-Swap to Backup\nElective Preference" as AF3
+    usecase "AF-04: Execute CGPA Tie-Breaker &\nSection Auto-Balancing" as AF4
+    usecase "AF-05: Waitlist Auto-Promotion &\nSeat Reclamation" as AF5
+
+    ' Actor Associations
+    Student --> UC1
+    Student --> AF1
+    Student --> UC6
+
+    Registrar --> AF2
+    Registrar --> UC5
+
+    UC5 --> Engine
+    AF4 --> Engine
+    AF5 --> Engine
+
+    ' Alternate Flow Relationships
+    AF1 .> UC1 : <<extend>>\n[Condition: Prior to Lock Deadline]
+    AF2 .> UC2 : <<extend>>\n[Condition: Approved Registrar Waiver]
+    AF3 .> UC3 : <<extend>>\n[Condition: Core Slot Clash Detected]
+    AF4 .> UC5 : <<extend>>\n[Condition: Equal Bids for Last Capacity Seat]
+    AF5 .> UC6 : <<extend>>\n[Condition: Seat Dropped in Add/Drop Window]
+}
+@enduml
